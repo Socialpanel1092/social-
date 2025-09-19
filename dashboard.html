@@ -297,7 +297,7 @@ window.onload = fetchBalance;
 				'5000 Followers': 2500,
 				'2000 Followers': 1200,
 				'1000 Followers': 40000,
-				'500 Followers': 10000,				git config --global credential.helper wincred
+				'500 Followers': 10000,
 				'200 Followers': 5000,
 				'100 Followers': 2500,
 				'100000 Retweets': 600000,
@@ -689,15 +689,7 @@ window.onload = fetchBalance;
 			window.location.href = 'addfund.html';
 		};
 
-		// Modal logic for deposit (simulate deposit)
-		addFundsBtn.addEventListener('contextmenu', function(e) {
-			e.preventDefault();
-			depositModal.style.display = 'block';
-		});
-		closeModal.onclick = function() {
-			depositModal.style.display = 'none';
-			depositAmountInput.value = '';
-		};
+	// Removed contextmenu event for Add Funds button to ensure proper redirection on all platforms
 		depositBtn.onclick = function() {
 			const amount = parseFloat(depositAmountInput.value);
 			if (!isNaN(amount) && amount > 0) {
