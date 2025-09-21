@@ -36,25 +36,21 @@
     </table>
     <div id="noRecords" class="no-records" style="display:none;">No transactions found.</div>
   </div>
-  <script>
-    // Load transaction history from localStorage
-    function loadHistory() {
-      const history = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
-      const body = document.getElementById('historyBody');
-      const noRecords = document.getElementById('noRecords');
-      body.innerHTML = '';
-      if (history.length === 0) {
-        noRecords.style.display = 'block';
-        return;
-      }
-      noRecords.style.display = 'none';
-      history.forEach(tx => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${tx.date}</td><td>${tx.type}</td><td>${tx.amount}</td><td>${tx.status}</td>`;
-        body.appendChild(tr);
-      });
-    }
-    loadHistory();
-  </script>
+    <script>
+      window.onload = function() {
+        fetch('/api/transactions')
+          .then(res => res.json())
+          .then(data => {
+            const transactions = data.transactions || [];
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+            transactions.forEach(tx => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `<td>${tx.date}</td><td>${tx.type}</td><td>${tx.amount}</td><td>${tx.description || ''}</td>`;
+              tbody.appendChild(tr);
+            });
+          });
+      };
+    </script>
 </body>
 </html>

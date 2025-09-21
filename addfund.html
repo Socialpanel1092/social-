@@ -1,3 +1,30 @@
+<script>
+async function fundWallet() {
+  const amount = document.getElementById('amount').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const name = document.getElementById('name').value;
+  if (!amount || !email || !phone || !name) {
+    alert('Please fill all fields');
+    return;
+  }
+  try {
+    const res = await fetch('/api/flutterwave-pay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, email, phone, name })
+    });
+    const data = await res.json();
+    if (data.status === 'success' && data.data && data.data.link) {
+      window.location.href = data.data.link; // Redirect to Flutterwave payment page
+    } else {
+      alert('Failed to initiate payment.');
+    }
+  } catch (err) {
+    alert('Error connecting to funding server.');
+  }
+}
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,95 +168,46 @@
 <body>
     <div class="container">
         <h2 style="text-align:center;">Add Funds</h2>
-    <form id="fundForm" onsubmit="event.preventDefault(); fetchVirtualAccount();">
+    <form id="fundForm" onsubmit="event.preventDefault(); fundWallet();">
       <div class="form-group">
-        <input type="email" id="email" name="email" placeholder=" " required class="bouncy-border">
-        <label for="email">Enter Email</label>
+        <input type="number" id="amount" name="amount" placeholder=" " required class="bouncy-border">
+        <label for="amount">Enter Amount</label>
       </div>
-      <div class="form-group">
-        <input type="text" id="name" name="name" placeholder=" " required class="bouncy-border">
-        <label for="name">First Name</label>
-      </div>
-      <div class="form-group">
-        <input type="text" id="surname" name="surname" placeholder=" " required class="bouncy-border">
-        <label for="surname">Surname</label>
-      </div>
-      <div class="form-group">
-        <input type="tel" id="number" name="number" placeholder=" " required class="bouncy-border">
-        <label for="number">Phone Number</label>
-      </div>
-      <button type="submit" class="deposit-btn">Get Virtual Account</button>
+  <button type="submit" class="deposit-btn">Fund Wallet</button>
     </form>
     <div class="spinner" id="spinner"></div>
     <div class="processing-text" id="processingText">Processing...</div>
     <div id="accountDetails" style="display:none;margin-top:2rem;text-align:center;"></div>
     <div id="status" class="status"></div>
     </div>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
     <script>
-    function fetchVirtualAccount() {
-      const email = document.getElementById('email').value.trim();
-      const name = document.getElementById('name').value.trim();
-      const surname = document.getElementById('surname').value.trim();
-      const number = document.getElementById('number').value.trim();
-      const spinner = document.getElementById('spinner');
-      const processingText = document.getElementById('processingText');
-      const statusDiv = document.getElementById('status');
-      const acctDiv = document.getElementById('accountDetails');
-      statusDiv.textContent = '';
-      acctDiv.style.display = 'none';
-      spinner.style.display = 'block';
-      processingText.style.display = 'block';
-  fetch('http://localhost:5050/api/virtual-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, surname, number })
-      })
-      .then(res => res.json())
-      .then(data => {
-        spinner.style.display = 'none';
-        processingText.style.display = 'none';
-        if (data.account) {
-          acctDiv.innerHTML = `
-            <div style="font-size:1.1rem;color:#fff;margin-bottom:1rem;">Send funds to your unique account below:</div>
-            <div style="background:#e3f2fd;color:#1565c0;border:3px solid #6ec6ff;border-radius:18px;padding:1.2rem 0.5rem;margin-bottom:1.2rem;max-width:320px;display:inline-block;">
-              <b>Bank Name:</b> ${data.account.bankName}<br>
-              <b>Account Name:</b> ${data.account.accountName}<br>
-              <b>Account Number:</b> <span id="acctNum">${data.account.accountNumber}</span>
-              <button onclick="copyAcctNum()" style="margin-left:0.7rem;padding:0.2rem 0.8rem;border-radius:12px;border:none;background:#6ec6ff;color:#102542;font-weight:bold;cursor:pointer;">Copy</button>
-            </div>
-            <div style="color:#fff;font-size:0.98rem;">After payment, your balance will be updated automatically.</div>
-          `;
-          acctDiv.style.display = 'block';
-
-          // Simulate deposit and record transaction in localStorage
-          const amount = prompt('Enter deposit amount to record transaction:');
-          if (amount && !isNaN(amount) && Number(amount) > 0) {
-            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            const newTransaction = {
-              date: new Date().toLocaleString(),
-              amount: Number(amount),
-              type: 'Deposit',
-              status: 'Successful'
-            };
-            transactions.push(newTransaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            alert('Deposit of ₦' + amount + ' recorded!');
-          }
-        } else {
-          statusDiv.textContent = 'Failed to get virtual account. Try again.';
+    function fundWallet() {
+      const amount = document.getElementById('amount').value;
+      if (!amount) {
+        alert('Please enter an amount');
+        return;
+      }
+      FlutterwaveCheckout({
+        public_key: "FLWPUBK_TEST-9c02871359faf715e7455097eabf480b-X", // Use your public key
+        tx_ref: "tx-" + Date.now(),
+        amount: amount,
+        currency: "NGN",
+        payment_options: "card,banktransfer,ussd",
+        redirect_url: "https://your-frontend-url.com/payment-success", // Change to your actual redirect URL
+        customer: {
+          email: "user@example.com", // You can make this dynamic
+          phonenumber: "", // Optional
+          name: "Wallet User" // Optional
+        },
+        customizations: {
+          title: "Wallet Funding",
+          description: "Fund your wallet with Flutterwave",
+          logo: "https://your-frontend-url.com/logo.png" // Optional
         }
-      })
-      .catch(() => {
-        spinner.style.display = 'none';
-        processingText.style.display = 'none';
-        statusDiv.textContent = 'Error connecting to funding server.';
       });
     }
-    function copyAcctNum() {
-      const acctNum = document.getElementById('acctNum').textContent;
-      navigator.clipboard.writeText(acctNum);
-      alert('Account number copied!');
-    }
     </script>
+</script>
 </body>
 </html>
