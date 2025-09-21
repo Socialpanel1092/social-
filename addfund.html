@@ -179,7 +179,7 @@
       acctDiv.style.display = 'none';
       spinner.style.display = 'block';
       processingText.style.display = 'block';
-      fetch('http://localhost:5000/api/virtual-account', {
+  fetch('http://localhost:5050/api/virtual-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name, surname, number })
