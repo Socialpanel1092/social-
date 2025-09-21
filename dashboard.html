@@ -159,6 +159,7 @@
 					<a href="#" id="accountMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Account</a>
 					<a href="api.html" id="apiMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">API</a>
 					<a href="services.html" id="servicesMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Services</a>
+					<a href="transactionhistory.html" id="transactionHistoryMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Transaction History</a>
 					<a href="customer-care.html" id="customerCareMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Customer Care</a>
 					<a href="#" id="logoutBtn" style="display:block;padding:1rem 1.5rem;color:#e74c3c;text-decoration:none;">Log Out</a>
 				</div>
@@ -267,18 +268,21 @@
 	</section>
 
 	<script>
-// Fetch and display account balance from backend
+// Fetch and display account balance from backend (Monnify integration)
 function fetchBalance() {
-	const email = localStorage.getItem('loggedInEmail');
-	if (!email) {
-		document.getElementById('accountBalance').textContent = '0.00';
-		return;
-	}
-	fetch('/api/deposit/balance?email=' + encodeURIComponent(email))
-		.then(res => res.json())
-		.then(data => {
-			document.getElementById('accountBalance').textContent = data.balance.toFixed(2);
-		});
+  let email = localStorage.getItem('loggedInEmail');
+  if (!email) {
+    document.getElementById('accountBalance').textContent = '0.00';
+    return;
+  }
+  fetch('http://localhost:5000/api/balance?email=' + encodeURIComponent(email))
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('accountBalance').textContent = (data.balance || 0).toFixed(2);
+    })
+    .catch(() => {
+      document.getElementById('accountBalance').textContent = '0.00';
+    });
 }
 window.onload = fetchBalance;
 		// Menu button logic
