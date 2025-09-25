@@ -1,86 +1,53 @@
+// ...existing code...
+
 const fs = require('fs');
-const BALANCE_FILE = 'balance.json';
+const USERS_FILE = 'users.json';
 
-// Helper to read balance.json
-function getBalanceData() {
-  if (!fs.existsSync(BALANCE_FILE)) {
-    fs.writeFileSync(BALANCE_FILE, JSON.stringify({ balance: 0, transactions: [] }, null, 2));
+// Signup endpoint
+app.post('/api/signup', (req, res) => {
+  const { email, password, name } = req.body;
+  let users = [];
+  if (fs.existsSync(USERS_FILE)) {
+    users = JSON.parse(fs.readFileSync(USERS_FILE));
   }
-  return JSON.parse(fs.readFileSync(BALANCE_FILE));
-}
-
-// Helper to write balance.json
-function setBalanceData(data) {
-  fs.writeFileSync(BALANCE_FILE, JSON.stringify(data, null, 2));
-}
-
-// Endpoint to get current balance
-app.get('/api/balance', (req, res) => {
-  const data = getBalanceData();
-  res.json({ balance: data.balance });
-});
-
-// Endpoint to get transaction history
-app.get('/api/transactions', (req, res) => {
-  const data = getBalanceData();
-  res.json({ transactions: data.transactions });
-});
-
-// Endpoint to deduct from balance for order
-app.post('/api/deduct', (req, res) => {
-  const { amount, description } = req.body;
-  let data = getBalanceData();
-  if (amount > data.balance) {
-    return res.status(400).json({ error: 'Insufficient balance' });
+  if (users.find(u => u.email === email)) {
+    return res.status(400).json({ error: 'Email already exists' });
   }
-  data.balance -= amount;
-  data.transactions.push({
-    type: 'Order',
-    amount: -amount,
-    description: description || 'Order submitted',
-    date: new Date().toISOString()
-  });
-  setBalanceData(data);
-  res.json({ balance: data.balance });
+  users.push({ email, password, name });
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users));
+  res.json({ success: true });
 });
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const app = express();
-const PORT = process.env.PORT || 5050;
 
-const FLW_PUBLIC_KEY = process.env.FLW_PUBLIC_KEY;
-const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
-const FLW_ENCRYPTION_KEY = process.env.FLW_ENCRYPTION_KEY;
+// Login endpoint
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+  let users = [];
+  if (fs.existsSync(USERS_FILE)) {
+    users = JSON.parse(fs.readFileSync(USERS_FILE));
+  }
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  res.json({ success: true, name: user.name });
+});
 
-app.use(cors());
-app.use(express.json());
-
-// Flutterwave payment endpoint
-app.post('/api/flutterwave-pay', async (req, res) => {
+// Flutterwave Virtual Account endpoint
+app.post('/api/flutterwave-virtual-account', async (req, res) => {
   try {
-    const { amount, payment_type = 'card' } = req.body;
-    // Supported payment types: card, bank_transfer, ussd, etc.
+    const { email, name, phone } = req.body;
     const response = await axios.post(
-      `https://api.flutterwave.com/v3/charges?type=${payment_type}`,
+      'https://api.flutterwave.com/v3/virtual-account-numbers',
       {
-        tx_ref: 'tx-' + Date.now(),
-        amount,
+        email,
+        is_permanent: true,
+        tx_ref: 'va-' + Date.now(),
+        narration: 'Wallet Funding',
+        amount: 0,
         currency: 'NGN',
-        redirect_url: 'https://your-frontend-url.com/payment-success',
-        payment_type,
-        customer: {
-          email: '',
-          phonenumber: '',
-          name: ''
-        },
-        customizations: {
-          title: 'Wallet Funding',
-          description: 'Fund your wallet with Flutterwave',
-        },
-        public_key: FLW_PUBLIC_KEY,
-        encryption_key: FLW_ENCRYPTION_KEY
+        type: 'wallet',
+        name,
+        phone_number: phone
       },
       {
         headers: {
@@ -91,31 +58,8 @@ app.post('/api/flutterwave-pay', async (req, res) => {
     );
     res.json(response.data);
   } catch (err) {
-    res.status(500).json({ error: 'Flutterwave payment failed', details: err.message });
+    res.status(500).json({ error: 'Failed to create virtual account', details: err.message });
   }
 });
 
-// Flutterwave webhook endpoint for payment verification
-app.post('/api/flutterwave-webhook', (req, res) => {
-  const event = req.body;
-  if (event.event === 'charge.completed' && event.data.status === 'successful') {
-    // Update balance and record transaction
-    let data = getBalanceData();
-    data.balance += Number(event.data.amount);
-    data.transactions.push({
-      type: 'Deposit',
-      amount: Number(event.data.amount),
-      description: 'Flutterwave funding',
-      date: new Date().toISOString()
-    });
-    setBalanceData(data);
-    console.log(`Wallet funded: ₦${event.data.amount}`);
-    res.status(200).send('Webhook received');
-  } else {
-    res.status(200).send('Ignored');
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Funding backend running on http://localhost:${PORT}`);
-});
+// ...existing code...

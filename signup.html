@@ -110,24 +110,6 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
-        .back-link {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.2rem;
-        }
-        .back-link a {
-            text-decoration: none;
-            color: #fff;
-            background: #222;
-            padding: 0.5rem 1.2rem;
-            border-radius: 18px;
-            font-weight: bold;
-            transition: background 0.2s, color 0.2s;
-        }
-        .back-link a:hover {
-            background: #ff2222;
-            color: #fff;
-        }
         @media (max-width: 500px) {
             .container { width: 98vw; padding: 1rem; border-radius: 20px; }
             .form-group input { width: 90vw; }
@@ -138,52 +120,42 @@
 <body>
     <div class="container">
         <div class="socialpanel-title">SOCIALPANEL</div>
-        <div class="subtitle">Create your account to boost your social media presence</div>
+        <div class="subtitle">Create your account<br>Sign up to get started</div>
         <form id="signupForm" style="width:100%; display: flex; flex-direction: column; align-items: center;">
-            <div class="form-group">
-                <input type="text" id="signupName" name="name" placeholder=" " required>
-                <label for="signupName">First Name</label>
-            </div>
-            <div class="form-group">
-                <input type="text" id="signupSurname" name="surname" placeholder=" " required>
-                <label for="signupSurname">Surname</label>
-            </div>
             <div class="form-group">
                 <input type="email" id="signupEmail" name="email" placeholder=" " required>
                 <label for="signupEmail">Email</label>
-            </div>
-            <div class="form-group">
-                <input type="tel" id="signupNumber" name="number" placeholder=" " required pattern="[0-9]{10,15}">
-                <label for="signupNumber">Phone Number</label>
             </div>
             <div class="form-group">
                 <input type="password" id="signupPassword" name="password" placeholder=" " required>
                 <label for="signupPassword">Password</label>
             </div>
             <button type="submit" class="signup-btn">Sign Up</button>
+            <div style="margin-top:10px;text-align:center;">
+              <a href="index.html" style="color:#ff2222;text-decoration:underline;font-weight:bold;">Already have an account? Sign In</a>
+            </div>
         </form>
         <div id="signupStatus" class="status"></div>
-        <div class="back-link">
-            <a href="index.html">Back to Login</a>
-        </div>
     </div>
     <script>
+        // Save account to localStorage
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            var name = document.getElementById('signupName').value.trim();
-            var surname = document.getElementById('signupSurname').value.trim();
-            var email = document.getElementById('signupEmail').value.trim();
-            var number = document.getElementById('signupNumber').value.trim();
+            document.getElementById('signupStatus').textContent = 'Processing...';
+            var email = document.getElementById('signupEmail').value;
             var password = document.getElementById('signupPassword').value;
             var accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
-            if(accounts[email]) {
-                document.getElementById('signupStatus').textContent = 'Account already exists.';
-                return;
-            }
-            accounts[email] = { password, name, surname, number };
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            document.getElementById('signupStatus').textContent = 'Account created! Redirecting...';
-            setTimeout(function(){ window.location.href = 'dashboard.html'; }, 1200);
+            setTimeout(function() {
+                if(accounts[email]) {
+                    document.getElementById('signupStatus').textContent = 'Account already exists!';
+                } else {
+                    accounts[email] = password;
+                    localStorage.setItem('accounts', JSON.stringify(accounts));
+                    localStorage.setItem('currentUser', email); // Mark user as logged in
+                    document.getElementById('signupStatus').textContent = 'Signup successful! Redirecting to dashboard...';
+                    setTimeout(function(){ window.location.href = 'dashboard.html'; }, 1200);
+                }
+            }, 1200); 
         });
     </script>
 </body>
