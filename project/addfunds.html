@@ -1,0 +1,35 @@
+<form id="moniepointForm" onsubmit="event.preventDefault(); createMoniepointAccount();">
+  <input type="text" id="name" placeholder="Full Name" required>
+  <input type="tel" id="phone" placeholder="Phone Number" required>
+  <button type="submit">Generate Moniepoint Account</button>
+</form>
+<div id="moniepointDetails"></div>
+
+<script>
+function random2Digits() {
+  return Math.floor(10 + Math.random() * 90);
+}
+async function createMoniepointAccount() {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const customName = `${name} ${random2Digits()}Mfy`;
+  document.getElementById('moniepointDetails').innerHTML = "Generating account...";
+  const res = await fetch('http://localhost:5050/api/moniepoint-create-account', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: customName, phone })
+  });
+  const data = await res.json();
+  if (data.accountNumber) {
+    document.getElementById('moniepointDetails').innerHTML = `
+      <h3>Permanent Account Created</h3>
+      <p>Bank: <strong>Moniepoint Microfinance Bank</strong></p>
+      <p>Account Number: <strong>${data.accountNumber}</strong></p>
+      <p>Account Name: <strong>${customName}</strong></p>
+      <p>Send funds to this account. Your wallet will be credited automatically after payment.</p>
+    `;
+  } else {
+    document.getElementById('moniepointDetails').innerHTML = "Failed to generate account.";
+  }
+}
+</script>

@@ -42,21 +42,77 @@
 		}
 	body { font-family: Arial, sans-serif; background: #f4f6fa; margin: 0; }
 	header { background: #2d3e50; color: #fff; padding: 2rem 0; text-align: center; position: relative; }
-	.panel { background: #fff; max-width: 700px; margin: 2rem auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 10px; padding: 2rem; }
+	.panel {
+		background: white;
+		width: 280px;
+		margin: 2.5rem auto;
+		box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 8px #000;
+		border-radius: 50px;
+		padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		animation: bounceIn 1.2s cubic-bezier(.68,-0.55,.27,1.55) both;
+	}
+	@keyframes bounceIn {
+		0% { transform: scale(0.7); box-shadow: 0 0 0 0 #000; }
+		60% { transform: scale(1.1); box-shadow: 0 0 0 16px #000; }
+		80% { transform: scale(0.95); }
+		100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 8px #000; }
+	}
 	.contact { background: #fff; max-width: 700px; margin: 2rem auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 2rem; }
 	.contact input, .contact textarea { width: 100%; padding: 0.7rem; margin: 0.5rem 0; border-radius: 5px; border: 1px solid #ccc; }
 	.contact button { background: #2d3e50; color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 5px; cursor: pointer; }
-	.bouncy-border {
-		animation: borderBounce 1.2s infinite alternate;
-		box-shadow: 0 0 0 0 #2d3e50;
+	/* Classy sky blue select/input style */
+		.bouncy-border {
+			border: 3.5px solid #6ec6ff;
+			background: #e3f2fd;
+			color: #1565c0;
+			font-weight: 500;
+			transition: border-color 0.2s, box-shadow 0.2s;
+			box-shadow: 0 0 16px 2px #b3e5fc55, 0 0 0 4px #e3f2fd;
+		}
+		.bouncy-border:focus {
+			border-color: #039be5;
+			background: #e1f5fe;
+			outline: none;
+			box-shadow: 0 0 0 4px #b3e5fc, 0 0 16px 2px #6ec6ff99;
+		}
+		select.bouncy-border {
+			appearance: none;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-image: url('data:image/svg+xml;utf8,<svg fill="%231565c0" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+			background-repeat: no-repeat;
+			background-position: right 0.7rem center;
+			background-size: 1.2em;
+			padding-right: 2.2em;
+			cursor: pointer;
+			border-radius: 18px;
+			box-shadow: 0 0 16px 2px #b3e5fc55, 0 0 0 4px #e3f2fd;
+		}
+	.balance-panel {
+		margin-top: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
 	}
-	@keyframes borderBounce {
-		0% { box-shadow: 0 0 0 0 #2d3e50; }
-		50% { box-shadow: 0 0 8px 2px #2d3e50; }
-		100% { box-shadow: 0 0 0 0 #2d3e50; }
+	.account-balance-box {
+		border: 3px solid #6ec6ff;
+		background: #e3f2fd;
+		color: #1565c0;
+		border-radius: 18px;
+		padding: 0.5rem 0.8rem;
+		font-size: 1.08rem;
+		font-weight: bold;
+		box-shadow: 0 0 12px 2px #b3e5fc55;
+		letter-spacing: 1px;
+		display: inline-block;
+		min-width: 170px;
+		max-width: 220px;
+		text-align: center;
 	}
-	.balance-panel { margin-top: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; }
-	.balance-panel span { font-size: 1.2rem; font-weight: bold; }
 	.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
 	.modal-content { background: #fff; margin: 10% auto; padding: 2rem; border-radius: 10px; max-width: 350px; text-align: center; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 	.close { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #2d3e50; }
@@ -88,7 +144,7 @@
 	<header>
 		<div style="display:flex;justify-content:space-between;align-items:center;">
 			<div>
-				<h1 style="font-weight: boldest; color: wheat; font-size: 50px; text-align: left;">SOCIAL PANEL</h>
+				<h1 class="socialpanel-header">SOCIAL PANEL</h1>
 				<h1 style="text-align: left;">Boost Your Social Media</h1>
 				<p style="text-align: left;">Grow your online presence with our all-in-one social media boosting panel</p>
 			</div>
@@ -102,18 +158,20 @@
 					<a href="settings.html" id="settingsMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Settings</a>
 					<a href="#" id="accountMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Account</a>
 					<a href="api.html" id="apiMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">API</a>
+					<a href="services.html" id="servicesMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Services</a>
+					<a href="transactionhistory.html" id="transactionHistoryMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Transaction History</a>
 					<a href="customer-care.html" id="customerCareMenu" style="display:block;padding:1rem 1.5rem;color:#2d3e50;text-decoration:none;">Customer Care</a>
 					<a href="#" id="logoutBtn" style="display:block;padding:1rem 1.5rem;color:#e74c3c;text-decoration:none;">Log Out</a>
 				</div>
 			</div>
 		</div>
-		<div class="balance-panel">
-			<span style="font-weight: bold;">Account Balance: NGN<span id="accountBalance">0</span></span>
-			<button id="addFundsBtn" class="round-blue-btn">Add Funds</button>
-		</div>
+		<span class="account-balance-box">Account Balance: NGN<span id="accountBalance">0</span></span>
+		<a href="addfunds.html">
+  			<button id="addFundsBtn" class="round-blue-btn">Add Funds</button>
+		</a>
 		<style>
 		.round-blue-btn {
-			background: #102542;
+			background: red;
 			color: #fff;
 			border: none;
 			padding: 1.2rem;
@@ -132,6 +190,22 @@
 			transform: scale(1.05);
 			box-shadow: 0 8px 24px rgba(16,37,66,0.22);
 		}
+			.socialpanel-header {
+				display: inline-block;
+				font-weight: boldest;
+				color: #ff2222;
+				font-size: 2.7rem;
+				text-align: left;
+				letter-spacing: 2px;
+				padding: 0.4rem 1.5rem;
+				border: 3px solid #6ec6ff;
+				background: #e3f2fd;
+				border-radius: 18px;
+				box-shadow: 0 0 12px 2px #b3e5fc55;
+				margin-bottom: 0.5rem;
+				margin-top: 0.5rem;
+				text-shadow: 0 2px 12px #000, 0 0 2px #ff2222;
+			}
 		</style>
 	</header>
 	<section class="panel">
@@ -139,30 +213,32 @@
 		<form id="orderForm">
 			<div class="form-group">
 				<select id="category" name="category" required class="bouncy-border">
-					<option value="" disabled selected hidden></option>
+					<option value="" disabled selected>Choose Category</option>
 					<option value="Instagram">Instagram</option>
+					<option value="InstagramCHEAPEST">InstagramCHEAPEST</option>
 					<option value="Facebook">Facebook</option>
 					<option value="Twitter">Twitter</option>
 					<option value="TikTok">TikTok</option>
-					<option value="telegram">Telegram</option>
+					<option value="TiktokCHEAP">TiktokCHEAP</option>
+					<option value="Telegram">Telegram</option>
 					<option value="Youtube">Youtube</option>
-					<option value="linkdln">Linkdln</option>
-					<option value="whatsapp">Whatsapp</option>
-					<option value="thread">Thread</option>
-					<option value="amazonmusic">AmazonMusic</option>
-					<option value="likee">Likee</option>
-					<option value="snapchat">Snapchat</option>
-					<option value="audiomack">Audiomack</option>
-					<option value="discord">Discord</option>
-					<option value="spotify">Spotify</option>
+					<option value="linkdln">linkdln</option>
+					<option value="whatsapp">whatsapp</option>
+					<option value="thread">thread</option>
+					<option value="amazonmusic">amazonmusic</option>
+					<option value="likee">likee</option>
+					<option value="snapchat">snapchat</option>
+					<option value="audiomack">audiomack</option>
+					<option value="discord">discord</option>
+					<option value="spotify">spotify</option>
 				</select>
-				<label for="category">Choose Category</label>
+				<label id="categoryLabel" for="category">Choose Category</label>
 			</div>
 			<div class="form-group">
 				<select id="service" name="service" required class="bouncy-border">
-					<option value="" disabled selected hidden></option>
+					<option value="" disabled selected>Choose Service</option>
 				</select>
-				<label for="service">Choose Service</label>
+				<label id="serviceLabel" for="service">Choose Service</label>
 			</div>
 			<div class="form-group">
 				<input type="url" id="link" name="link" placeholder=" " required class="bouncy-border">
@@ -172,7 +248,7 @@
 				<input type="text" id="price" name="price" readonly placeholder=" " class="bouncy-border">
 				<label for="price">Charge per Order</label>
 			</div>
-			<button type="submit" class="small-blue-btn">Submit Order</button>
+			<button type="submit" class="small-blue-btn" id="submitOrderBtn">Submit Order</button>
 		</form>
 		<p id="orderStatus" style="color:green;"></p>
 		<p style="text-align:center;">Fast delivery, affordable prices, and 24/7 support!</p>
@@ -192,18 +268,21 @@
 	</section>
 
 	<script>
-// Fetch and display account balance from backend
+// Fetch and display account balance from backend (Monnify integration)
 function fetchBalance() {
-	const email = localStorage.getItem('loggedInEmail');
-	if (!email) {
-		document.getElementById('accountBalance').textContent = '0.00';
-		return;
-	}
-	fetch('/api/deposit/balance?email=' + encodeURIComponent(email))
-		.then(res => res.json())
-		.then(data => {
-			document.getElementById('accountBalance').textContent = data.balance.toFixed(2);
-		});
+  let email = localStorage.getItem('loggedInEmail');
+  if (!email) {
+    document.getElementById('accountBalance').textContent = '0.00';
+    return;
+  }
+  fetch('http://localhost:5000/api/balance?email=' + encodeURIComponent(email))
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('accountBalance').textContent = (data.balance || 0).toFixed(2);
+    })
+    .catch(() => {
+      document.getElementById('accountBalance').textContent = '0.00';
+    });
 }
 window.onload = fetchBalance;
 		// Menu button logic
@@ -225,26 +304,37 @@ window.onload = fetchBalance;
 		// Example service and price data
 		const serviceData = {
 			Instagram: {
-				'100000 Followers': 600000,
-				'50000 Followers': 300000,
-				'30000 Followers': 150000,
-				'20000 Followers': 120000,
-				'15000 Followers': 90000,
-				'10000 Followers': 60000,
-				'5000 Followers': 30000,
-				'2000 Followers': 15000,
-				'1000 Followers': 6000,
-				'500 Followers': 3000,
-				'200 Followers': 1500,
-				'100 Followers': 750, 
-				'1000 Likes': 300,
-				'500 Likes': 150,
-				'200 Likes': 70,
-				'100 Likes': 35,
-				'1000 Views': 500,
-				'500 Views': 250,
-				'200 Views': 125,
-				'100 Views': 60,
+				'100000 Followers': 300000,
+				'50000 Followers': 150000,
+				'20000 Followers': 75000,
+				'15000 Followers': 40000,
+				'10000 Followers': 20000,
+				'5000 Followers': 10000,
+				'2000 Followers': 5000,
+				'1000 Followers': 3000,
+				'500 Followers': 1500,
+				'200 Followers': 650,
+				'100 Followers': 325,
+				'100000 Likes': 400000,
+				'50000 Likes': 200000,
+				'20000 Likes': 80000,
+				'10000 Likes': 40000,
+				'5000 Likes': 20000,
+				'2000 Likes': 8000,
+				'1000 Likes': 4000,
+				'500 Likes': 2000,
+				'200 Likes': 800,
+				'100 Likes': 400,
+				'100000 Views': 10000,
+				'50000 Views': 5000,
+				'20000 Views': 2000,
+				'10000 Views': 1000,
+				'5000 Views': 500,
+				'2000 Views': 200,
+				'1000 Views': 100,
+				'500 Views': 50,
+				'200 Views': 25,
+				'100 Views': 10,
 				'100000 Saves': 34000,
 				'50000 Saves': 15200,
 				'20000 Saves': 8800,
@@ -264,7 +354,49 @@ window.onload = fetchBalance;
 				'1000 Comments': 420,
 				'500 Comments': 210,
 				'200 Comments': 105,
-				'100 Comments': 502.5
+				'100 Comments': 502.5,
+				'100000 Repost': 200000,
+				'50000 Repost': 100000,
+				'20000 Repost': 40000,
+				'10000 Repost': 20000,
+				'5000 Repost': 10000,
+				'2000 Repost': 4000,
+				'1000 Repost': 2000,
+				'500 Repost': 1000,
+				'200 Repost': 400,
+				'100 Repost': 200,
+				'100000 Profile Visit': 150000,
+				'50000 Profile Visit': 75000,
+				'20000 Profile Visit': 30000,
+				'10000 Profile Visit': 15000,
+				'5000 Profile Visit': 7500,
+				'2000 Profile Visit': 3000,
+				'1000 Profile Visit': 1500,
+				'500 Profile Visit': 750,
+				'200 Profile Visit': 300,
+				'100 Profile Visit': 150
+			},
+			InstagramCHEAPEST: {
+				'100000 Followers': 250000,
+				'50000 Followers': 125000,
+				'20000 Followers': 50000,
+				'10000 Followers': 25000,
+				'5000 Followers': 12500,
+				'2000 Followers': 5000,
+				'1000 Followers': 2500,
+				'500 Followers': 1250,
+				'200 Followers': 500,
+				'100 Followers': 250,
+				'100000 Likes': 260000,
+				'50000 Likes': 130000,
+				'20000 Likes': 52000,
+				'10000 Likes': 26000,
+				'5000 Likes': 13000,
+				'2000 Likes': 5200,
+				'1000 Likes': 2600,
+				'500 Likes': 1300,
+				'200 Likes': 520,
+				'100 Likes': 260
 			},
 			Facebook: {
 				'100000 Profile Friends': 700000,
@@ -290,46 +422,46 @@ window.onload = fetchBalance;
 				'100 Post Engagement': 75
 			},
 			Twitter: {
-				'100000 Followers': 400000,
-				'50000 Followers': 200000,
-				'20000 Followers': 10000,
-				'10000 Followers': 5000,
-				'5000 Followers': 2500,
-				'2000 Followers': 1200,
-				'1000 Followers': 40000,
-				'500 Followers': 10000,				git config --global credential.helper wincred
-				'200 Followers': 5000,
-				'100 Followers': 2500,
-				'100000 Retweets': 600000,
-				'50000 Retweets': 300000,
-				'20000 Retweets': 150000,
-				'10000 Retweets': 75000,
-				'5000 Retweets': 42500,
-				'2000 Retweets': 21250,
-				'1000 Retweets': 11050,
-				'500 Retweets': 6025,
-				'200 Retweets': 3012.5,
-				'100 Retweets': 1550,
-				'100000 Likes': 500000,
-				'50000 Likes': 250000,
-				'20000 Likes': 125000,
-				'10000 Likes': 65000,
-				'5000 Likes': 35200,
-				'2000 Likes': 17100,
-				'1000 Likes': 9000,
-				'500 Likes': 5580,
-				'200 Likes': 2240,
-				'100 Likes': 1120,
-				'100000 Views': 200000,
-				'50000 Views': 100000,
-				'20000 Views': 50000,
-				'10000 Views': 25000,
-				'5000 Views': 12500,
-				'2000 Views': 6250,
-				'1000 Views': 3125,
-				'500 Views': 1612.5,
-				'200 Views': 890,
-				'100 views': 540,
+				'100000 Followers': 1800000,
+				'50000 Followers': 900000,
+				'20000 Followers': 450000,
+				'10000 Followers': 180000,
+				'5000 Followers': 90000,
+				'2000 Followers': 45000,
+				'1000 Followers': 18000,
+				'500 Followers': 9000,
+				'200 Followers': 4500,
+				'100 Followers': 1800,
+				'100000 Retweets': 300000,
+				'50000 Retweets': 150000,
+				'20000 Retweets': 60000,
+				'10000 Retweets': 30000,
+				'5000 Retweets': 15000,
+				'2000 Retweets': 6000,
+				'1000 Retweets': 3000,
+				'500 Retweets': 1500,
+				'200 Retweets': 600,
+				'100 Retweets': 300,
+				'100000 Likes': 300000,
+				'50000 Likes': 150000,
+				'20000 Likes': 60000,
+				'10000 Likes': 30000,
+				'5000 Likes': 15000,
+				'2000 Likes': 6000,
+				'1000 Likes': 3000,
+				'500 Likes': 1500,
+				'200 Likes': 600,
+				'100 Likes': 300,
+				'100000 Views': 30000,
+				'50000 Views': 15000,
+				'20000 Views': 6000,
+				'10000 Views': 3000,
+				'5000 Views': 1500,
+				'2000 Views': 600,
+				'1000 Views': 300,
+				'500 Views': 150,
+				'200 Views': 60,
+				'100 views': 30,
 				'100000 Comments': 200000,
 				'50000 Comments': 100000,
 				'20000 Comments': 50000,
@@ -339,49 +471,140 @@ window.onload = fetchBalance;
 				'1000 Comments': 3125,
 				'500 Comments': 1612,
 				'200 Comments': 750,
-				'100 Comments': 380
+				'100 Comments': 380,
+				'100000 Mentions': 300000000,
+				'50000 Mentions': 150000000,
+				'20000 Mentions': 6000000,
+				'10000 Mentions': 3000000,
+				'5000 Mentions': 1500000,
+				'2000 Mentions': 600000,
+				'1000 Mentions': 300000,
+				'500 Mentions': 150000,
+				'200 Mentions': 60000,
+				'100 Mentions': 30000,
+				'100000 Space listeners': 2000000000,
+				'50000 Space listeners': 1000000000,
+				'20000 Space listeners': 500000,
+				'10000 Space listeners': 250000,
+				'5000 Space listeners': 100000,
+				'2000 Space listeners': 50000,
+				'1000 Space listeners': 25000,
+				'500 Space listeners': 10000,
+				'200 Space listeners': 5000,
+				'100000 Polevote': 50000,
+				'50000 Polevote': 25000,
+				'20000 Polevote': 10000,
+				'10000 Polevote': 5000,
+				'5000 Polevote': 2500,
+				'2000 Polevote': 1000,
+				'1000 Polevote': 500,
+				'500 Polevote': 250,
+				'200 Polevote': 100,
+				'100 Polevote': 50
 			},
 			TikTok: {
-				'100000 Followers': 650000,
-				'50000 Followers': 325000,
-				'20000 Followers': 130000,
-				'10000 Followers': 65000,
-				'5000 Followers': 32500,
-				'2000 Followers': 15150,
-				'1000 Followers': 6500,
-				'500 Followers': 3250,
-				'200 Followers': 1625,
-				'100 Followers': 780,
-				'100000 Likes': 100000,
-				'50000 Likes': 50000,
-				'20000 Likes': 25000,
-				'10000 Likes': 12200,
-				'5000 Likes': 6100,
-				'2000 Likes': 3600,
-				'1000 Likes': 1600,
-				'500 Likes': 600,
-				'200 Likes': 300,
-				'100 Likes': 150,
-				'100000 Views': 200000,
-				'50000 Views': 100000,
-				'20000 Views': 50000,
-				'10000 Views': 25000,
-				'5000 Views': 12500,
-				'2000 Views': 6250,
-				'1000 Views': 3125,
-				'500 Views': 1612,
-				'200 Views': 750,
-				'100 Views': 380,
-				'100000 Comments': 250000,
-				'50000 Comments': 125000,
-				'20000 Comments': 61250,
-				'10000 Comments': 36250,
-				'5000 Comments': 16125,
-				'2000 Comments': 8900,
-				'1000 Comments': 4550,
-				'500 Comments': 2250,
-				'200 Comments': 1125,
-				'100 Comments': 575
+				'100000 Followers': 300000,
+				'50000 Followers': 150000,
+				'20000 Followers': 60000,
+				'10000 Followers': 30000,
+				'5000 Followers': 15000,
+				'2000 Followers': 6000,
+				'1000 Followers': 3000,
+				'500 Followers': 1500,
+				'200 Followers': 600,
+				'100 Followers': 300,
+				'100000 Likes': 10000,
+				'50000 Likes': 5000,
+				'20000 Likes': 2500,
+				'10000 Likes': 1000,
+				'5000 Likes': 500,
+				'2000 Likes': 250,
+				'1000 Likes': 100,
+				'500 Likes': 50,
+				'200 Likes': 20,
+				'100 Likes': 10,
+				'100000 Views': 100000,
+				'50000 Views': 50000,
+				'20000 Views': 20000,
+				'10000 Views': 10000,
+				'5000 Views': 5000,
+				'2000 Views': 2000,
+				'1000 Views': 1000,
+				'500 Views': 500,
+				'200 Views': 200,
+				'100 Views': 100,
+				'100000 Comments': 400000,
+				'50000 Comments': 200000,
+				'20000 Comments': 80000,
+				'10000 Comments': 40000,
+				'5000 Comments': 20000,
+				'2000 Comments': 10000,
+				'1000 Comments': 5000,
+				'500 Comments': 2000,
+				'200 Comments': 800,
+				'100 Comments': 400,
+				'100000 Shares|Saves|Coins': 500000,
+				'50000 Shares|Saves|Coins': 250000,
+				'20000 Shares|Saves|Coins': 100000,
+				'10000 Shares|Saves|Coins': 50000,
+				'5000 Shares|Saves|Coins': 25000,
+				'2000 Shares|Saves|Coins': 10000,
+				'1000 Shares|Saves|Coins': 5000,
+				'500 Shares|Saves|Coins': 2500,
+				'200 Shares|Saves|Coins': 1000,
+				'100 Shares|Saves|Coins': 500,
+				'100000 Livestreams real profile': 250000000000,
+				'50000 Livestreams real profile': 125000000000,
+				'20000 Livestreams real profile': 600000000,
+				'10000 Livestreams real profile': 250000000,
+				'5000 Livestreams real profile': 125000000,
+				'2000 Livestreams real profile': 6000000,
+				'1000 Livestreams real profile': 250000,
+				'500 Livestreams real profile': 125000,
+				'200 Livestreams real profile': 60000,
+				'100 Livestreams real profile': 25000,
+				'100000 Saves': 15000,
+				'50000 Saves': 7500,
+				'20000 Saves': 3000,
+				'10000 Saves': 1500,
+				'5000 Saves': 750,
+				'2000 Saves': 300,
+				'1000 Saves': 150,
+				'500 Saves': 75,
+				'200 Saves': 30,
+				'100 Saves': 15
+			},
+			TiktokCHEAP: {
+				'100000 Followers': 250000,
+				'50000 Followers': 125000,
+				'20000 Followers': 50000,
+				'10000 Followers': 25000,
+				'5000 Followers': 12500,
+				'2000 Followers': 5000,
+				'1000 Followers': 2500,
+				'500 Followers': 1200,
+				'200 Followers': 500,
+				'100 Followers': 250,
+				'100000 Likes': 5000,
+				'50000 Likes': 2500,
+				'20000 Likes': 1000,
+				'10000 Likes': 500,
+				'5000 Likes': 250,
+				'2000 Likes': 100,
+				'1000 Likes': 50,
+				'500 Likes': 25,
+				'200 Likes': 10,
+				'100 Likes': 5,
+				'100000 Saves': 15000,
+				'50000 Saves': 6000,
+				'20000 Saves': 3000,
+				'10000 Saves': 1500,
+				'5000 Saves': 600,
+				'2000 Saves': 300,
+				'1000 Saves': 150,
+				'500 Saves': 60,
+				'200 Saves': 30,
+				'100 Saves': 15
 			},
 			Telegram: {
 				'100000 Subscribers': 200000,
@@ -448,16 +671,16 @@ window.onload = fetchBalance;
 				'100 Native views': 1650
 			},
 			linkdln: {
-				'100000 Page followers': 520000,
-				'50000 Page followers': 260000,
-				'20000 Page followers': 130000,
-				'10000 Page followers': 65000,
-				'5000 Page followers': 32500,
-				'2000 Page followers': 16500,
-				'1000 Page followers': 8250,
-				'500 Page followers': 4125,
-				'200 Page followers': 2725,
-				'100 Page followers': 1350,
+				'100000 Page followers': 600000,
+				'50000 Page followers': 300000,
+				'20000 Page followers': 150000,
+				'10000 Page followers': 60000,
+				'5000 Page followers': 30000,
+				'2000 Page followers': 15000,
+				'1000 Page followers': 6000,
+				'500 Page followers': 3000,
+				'200 Page followers': 1500,
+				'100 Page followers': 600,
 				'100000 Profile followers': 500000,
 				'50000 Profile followers': 250000,
 				'20000 Profile followers': 125000,
@@ -470,48 +693,48 @@ window.onload = fetchBalance;
 				'100 Profile followers': 525
 			},
 			whatsapp: {
-				'100000 Channel members': 450000,
-				'50000 Channel members': 225000,
-				'20000 Channel members': 110500,
-				'10000 Channel members': 60250,
-				'5000 Channel members': 30125,
-				'2000 Channel members': 15051,
-				'1000 Channel members': 5250,
-				'500 Channel members': 2125,
-				'200 Channel members': 1055,
-				'100 Channel members': 525,
-				'100000 Channel post emoji': 250000,
-				'50000 Channel post emoji': 125000,
-				'20000 Channel post emoji': 62500,
-				'10000 Channel post emoji': 31250,
-				'5000 Channel post emoji': 16125,
-				'2000 Channel post emoji': 8525,
-				'1000 Channel post emoji': 4500,
-				'500 Channel post emoji': 2250,
-				'200 Channel post emoji': 1125,
-				'100 Channel post emoji': 541
+				'100000 Channel members': 880000,
+				'50000 Channel members': 440000,
+				'20000 Channel members': 120000,
+				'10000 Channel members': 88000,
+				'5000 Channel members': 44000,
+				'2000 Channel members': 12000,
+				'1000 Channel members': 8800,
+				'500 Channel members': 4400,
+				'200 Channel members': 1200,
+				'100 Channel members': 880,
+				'100000 Channel post emoji': 400000,
+				'50000 Channel post emoji': 200000,
+				'20000 Channel post emoji': 100000,
+				'10000 Channel post emoji': 40000,
+				'5000 Channel post emoji': 20000,
+				'2000 Channel post emoji': 10000,
+				'1000 Channel post emoji': 5000,
+				'500 Channel post emoji': 2000,
+				'200 Channel post emoji': 1000,
+				'100 Channel post emoji': 400
 			},
 			thread: {
-				'100000 likes': 400000,
-				'50000 Likes': 200000,
+				'100000 likes': 500000,
+				'50000 Likes': 250000,
 				'20000 Likes': 100000,
 				'10000 Likes': 50000,
 				'5000 Likes': 25000,
-				'2000 Likes': 12000,
-				'1000 Likes': 6000,
-				'500 Likes': 3000,
-				'200 Likes': 1500,
-				'100 Likes': 650,
-				'100000 Followers': 220000,
-				'50000 Followers': 110000,
-				'20000 Followers': 55000,
-				'10000 Followers': 22550,
-				'5000 Followers': 11250,
-				'2000 Followers': 6125,
-				'1000 Followers': 3525,
-				'500 Followers': 1712,
-				'200 Followers': 750,
-				'100 Followers': 400
+				'2000 Likes': 10000,
+				'1000 Likes': 5000,
+				'500 Likes': 2500,
+				'200 Likes': 1000,
+				'100 Likes': 500,
+				'100000 Followers': 25000000,
+				'50000 Followers': 1250000,
+				'20000 Followers': 500000,
+				'10000 Followers': 250000,
+				'5000 Followers': 125000,
+				'2000 Followers': 50000,
+				'1000 Followers': 25000,
+				'500 Followers': 12500,
+				'200 Followers': 5000,
+				'100 Followers': 2500
 			},
 			amazonmusic: {
 				'100000 Music plays': 200000,
@@ -689,15 +912,7 @@ window.onload = fetchBalance;
 			window.location.href = 'addfund.html';
 		};
 
-		// Modal logic for deposit (simulate deposit)
-		addFundsBtn.addEventListener('contextmenu', function(e) {
-			e.preventDefault();
-			depositModal.style.display = 'block';
-		});
-		closeModal.onclick = function() {
-			depositModal.style.display = 'none';
-			depositAmountInput.value = '';
-		};
+	// Removed contextmenu event for Add Funds button to ensure proper redirection on all platforms
 		depositBtn.onclick = function() {
 			const amount = parseFloat(depositAmountInput.value);
 			if (!isNaN(amount) && amount > 0) {
@@ -714,14 +929,35 @@ window.onload = fetchBalance;
 			}
 		};
 
+
 		// Order form logic
 		const categorySelect = document.getElementById('category');
 		const serviceSelect = document.getElementById('service');
 		const priceInput = document.getElementById('price');
+		const submitOrderBtn = document.getElementById('submitOrderBtn');
+
+		// Disable order button if balance is 0
+		function updateOrderButtonState() {
+			const bal = parseFloat(accountBalanceSpan.textContent) || 0;
+			submitOrderBtn.disabled = bal <= 0;
+			submitOrderBtn.title = bal <= 0 ? 'Deposit funds to place an order' : '';
+		}
+		accountBalanceSpan.addEventListener('DOMSubtreeModified', updateOrderButtonState);
+		window.addEventListener('DOMContentLoaded', updateOrderButtonState);
 
 		categorySelect.addEventListener('change', function() {
-			serviceSelect.innerHTML = '<option value="">Select...</option>';
+			serviceSelect.innerHTML = '<option value="" disabled selected>Choose Service</option>';
 			priceInput.value = '';
+			// Update floating label to show selected category
+			var catLabel = document.getElementById('categoryLabel');
+			if (this.value) {
+				catLabel.textContent = this.value;
+			} else {
+				catLabel.textContent = 'Choose Category';
+			}
+			// Reset service label
+			var servLabel = document.getElementById('serviceLabel');
+			servLabel.textContent = 'Choose Service';
 			if (serviceData[this.value]) {
 				Object.keys(serviceData[this.value]).forEach(service => {
 					const opt = document.createElement('option');
@@ -735,6 +971,13 @@ window.onload = fetchBalance;
 		serviceSelect.addEventListener('change', function() {
 			const category = categorySelect.value;
 			const service = this.value;
+			// Update floating label to show selected service
+			var servLabel = document.getElementById('serviceLabel');
+			if (service) {
+				servLabel.textContent = service;
+			} else {
+				servLabel.textContent = 'Choose Service';
+			}
 			if (serviceData[category] && serviceData[category][service]) {
 				priceInput.value = 'NGN' + serviceData[category][service] + ' per order';
 			} else {
@@ -742,8 +985,21 @@ window.onload = fetchBalance;
 			}
 		});
 
+
 		document.getElementById('orderForm').addEventListener('submit', function(e) {
 			e.preventDefault();
+			// Parse price from input (format: NGNxxxx per order)
+			let priceStr = priceInput.value.replace(/[^\d.]/g, '');
+			let orderPrice = parseFloat(priceStr) || 0;
+			let bal = parseFloat(accountBalanceSpan.textContent) || 0;
+			if (bal < orderPrice) {
+				document.getElementById('orderStatus').textContent = 'Insufficient balance. Please deposit funds.';
+				return;
+			}
+			// Deduct price from balance
+			accountBalance = bal - orderPrice;
+			accountBalanceSpan.textContent = accountBalance.toFixed(2);
+			updateOrderButtonState();
 			// Save order to localStorage
 			var orders = JSON.parse(localStorage.getItem('orders') || '[]');
 			var order = {
@@ -754,7 +1010,12 @@ window.onload = fetchBalance;
 			};
 			orders.push(order);
 			localStorage.setItem('orders', JSON.stringify(orders));
-			document.getElementById('orderStatus').textContent = 'Order submitted and saved!';
+			document.getElementById('orderStatus').textContent = 'Order submitted and sent to WhatsApp!';
+			// Send order to WhatsApp
+			var whatsappNumber = '2348163328640'; 
+			var msg = `New Order!%0A%0ACategory: ${order.category}%0AService: ${order.service}%0ALink: ${order.link}%0APrice: ${order.price}`;
+			var waUrl = `https://wa.me/${whatsappNumber}?text=${msg}`;
+			window.open(waUrl, '_blank');
 		});
 	</script>
 </body>

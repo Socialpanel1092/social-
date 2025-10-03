@@ -7,6 +7,6 @@ app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI);
 
-app.use('/api/deposit', require('./routes/deposit'));
+app.use('/api/deposit', require('../routes/deposit'));
 
 app.listen(3000, () => console.log('Server running on port 3000'));
